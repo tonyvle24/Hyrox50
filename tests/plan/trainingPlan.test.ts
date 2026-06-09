@@ -52,16 +52,19 @@ describe('simplified training plan', () => {
     expect(monday.title).toMatch(/completed lower body.*sled/i);
     expect(monday.tony.main.map((detail) => detail.name).join(' ')).toMatch(/back squat|single-leg RDL|Bulgarian split squat|sled push|sled pull/i);
 
-    expect(tuesday.title).toMatch(/upper body.*core/i);
+    expect(tuesday.title).toMatch(/upper body.*HYROX engine/i);
     expect(tuesday.liz).toEqual(tuesday.tony);
+    expect(tuesday.estimatedMinutes).toBeGreaterThanOrEqual(65);
+    expect(tuesday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).toMatch(/SkiErg|RowErg/i);
     expect(tuesday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).not.toMatch(/squat|RDL|split squat|sled/i);
 
     expect(wednesday.title).toMatch(/aerobic recovery.*mobility/i);
     expect(wednesday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).not.toMatch(/deadlift|split squat|sled/i);
 
-    expect(thursday.title).toMatch(/HYROX technique/i);
+    expect(thursday.title).toMatch(/HYROX Circuit/i);
     expect(thursday.liz).toEqual(thursday.tony);
-    expect(thursday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).not.toMatch(/sled|squat|lunge/i);
+    expect(thursday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).toMatch(/sled/i);
+    expect(thursday.coachingNotes.join(' ')).toMatch(/controlled|moderate|recovered/i);
   });
 
   it('includes both fixed race days', () => {

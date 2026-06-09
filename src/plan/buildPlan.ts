@@ -8,7 +8,6 @@ import {
   buildFiftyKTaperDay,
   buildHyroxRaceDay,
   buildHyroxTaperDay,
-  buildHyroxTechniqueNoSledDay,
   buildMondayHyroxSkill,
   buildSaturdaySteady,
   buildSundayLongRun,
@@ -107,7 +106,13 @@ export const buildTrainingPlan = (): DailyPlan[] => {
     if (date === '2026-06-08') day = buildCompletedLowerBodySledDay(context);
     else if (date === '2026-06-09') day = buildUpperBodyCoreRecoveryDay(context);
     else if (date === '2026-06-10') day = buildAerobicRecoveryMobilityDay(context);
-    else if (date === '2026-06-11') day = buildHyroxTechniqueNoSledDay(context);
+    else if (date === '2026-06-11') {
+      const circuit = buildThursdayHyroxCircuit(context);
+      day = {
+        ...circuit,
+        coachingNotes: [...circuit.coachingNotes, 'Use a controlled, moderate sled load because heavy sled work was completed on Monday.'],
+      };
+    }
     else if (date === '2026-11-18') day = buildHyroxRaceDay(context);
     else if (date === '2026-12-13') day = buildFiftyKRaceDay(context);
     else if (date >= '2026-11-09' && date < '2026-11-18') day = buildHyroxTaperDay(context);

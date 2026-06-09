@@ -82,26 +82,27 @@ export const buildCompletedLowerBodySledDay = (context: PlanContext): DailyPlan 
 
 export const buildUpperBodyCoreRecoveryDay = (context: PlanContext): DailyPlan => {
   const athletePlan = plan(
-    'Train upper body and core while the legs recover.',
+    'Train upper body, core, and HYROX engine while the legs recover from heavy strength work.',
     easyWarmup('Both'),
     [
-      activity('Dumbbell bench press', '3 sets x 8 reps at a smooth, controlled load', 'RPE 6', '90 seconds between sets', 'Leave 4 good reps in reserve.'),
-      activity('Chest-supported dumbbell row', '3 sets x 10 reps', 'RPE 6', '75 seconds between sets', 'Keep the torso supported and shoulders controlled.'),
-      activity('Half-kneeling Pallof press', '3 sets x 10 reps/side', 'RPE 5-6', '45 seconds between sets', 'Resist rotation and breathe normally.'),
-      activity('Dead bug', '3 sets x 6 slow reps/side', 'RPE 4-5', '30 seconds between sets', 'Keep the low back gently supported.'),
+      activity('HYROX engine intervals', '5 rounds: 500 meters SkiErg, 500 meters RowErg, then 60 seconds easy walking', 'RPE 6-7', '90 seconds between rounds', 'Hold repeatable splits and finish the final round strong, not exhausted.'),
+      activity('Dumbbell bench press', '4 sets x 8 reps at a challenging but controlled load', 'RPE 7', '90 seconds between sets', 'Leave 3 good reps in reserve.'),
+      activity('Chest-supported dumbbell row', '4 sets x 10 reps', 'RPE 7', '75 seconds between sets', 'Keep the torso supported and shoulders controlled.'),
+      activity('Half-kneeling single-arm press', '3 sets x 8 reps/side', 'RPE 6-7', '75 seconds between sets', 'Brace the trunk without pushing through the legs.'),
+      activity('Pallof press + dead bug', '3 rounds: 10 Pallof presses/side, then 6 slow dead bugs/side', 'RPE 5-6', '45 seconds between rounds', 'Keep every rep controlled and breathe normally.'),
     ],
     cooldown('Both'),
   );
   return base(
     context,
-    'Upper Body + Core Recovery',
-    'Build upper-body and trunk strength without repeating yesterday\'s lower-body stress.',
-    50,
-    ['Dumbbells', 'Cable or resistance band', 'Exercise mat'],
-    plan('Use easy low-impact movement together.', easyWarmup('Together'), [activity('Easy bike or walk', '15-20 minutes at conversational effort', 'RPE 2-3', 'Continuous', 'Stop if leg soreness increases.')], cooldown('Together')),
+    'Upper Body + HYROX Engine',
+    'Complete a substantial training session without repeating yesterday\'s heavy lower-body and sled work.',
+    70,
+    ['SkiErg', 'RowErg', 'Dumbbells', 'Cable or resistance band', 'Exercise mat'],
+    plan('Warm up and establish engine rhythm together.', easyWarmup('Together'), [activity('Engine primer', '2 rounds: 250 meters easy SkiErg, 250 meters easy RowErg, 60 seconds walking', 'RPE 3-4', '30 seconds between rounds', 'Use smooth strokes and relaxed breathing.')], cooldown('Together')),
     athletePlan,
     athletePlan,
-    ['No running, sled work, squats, lunges, or hinging today.', 'Reduce load if yesterday\'s soreness affects setup or bracing.'],
+    ['Train with intent, but no running, sled work, squats, lunges, or hinging today.', 'Reduce load only if yesterday\'s soreness affects setup or bracing.'],
   );
 };
 
