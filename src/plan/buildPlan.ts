@@ -1,16 +1,20 @@
 import { addDaysToKey, getPlanDayNumber, PLAN_END, PLAN_START } from '../utils/dates';
 import { phaseForDate } from './phases';
 import {
+  buildAerobicRecoveryMobilityDay,
+  buildCompletedLowerBodySledDay,
   buildFridayRecovery,
   buildFiftyKRaceDay,
   buildFiftyKTaperDay,
   buildHyroxRaceDay,
   buildHyroxTaperDay,
+  buildHyroxTechniqueNoSledDay,
   buildMondayHyroxSkill,
   buildSaturdaySteady,
   buildSundayLongRun,
   buildThursdayHyroxCircuit,
   buildTuesdayEngine,
+  buildUpperBodyCoreRecoveryDay,
   buildWednesdayStrength,
   buildPostHyroxRecoveryDay,
 } from './templates';
@@ -100,7 +104,11 @@ export const buildTrainingPlan = (): DailyPlan[] => {
       phase: phaseForDate(date),
     };
     let day: DailyPlan;
-    if (date === '2026-11-18') day = buildHyroxRaceDay(context);
+    if (date === '2026-06-08') day = buildCompletedLowerBodySledDay(context);
+    else if (date === '2026-06-09') day = buildUpperBodyCoreRecoveryDay(context);
+    else if (date === '2026-06-10') day = buildAerobicRecoveryMobilityDay(context);
+    else if (date === '2026-06-11') day = buildHyroxTechniqueNoSledDay(context);
+    else if (date === '2026-11-18') day = buildHyroxRaceDay(context);
     else if (date === '2026-12-13') day = buildFiftyKRaceDay(context);
     else if (date >= '2026-11-09' && date < '2026-11-18') day = buildHyroxTaperDay(context);
     else if (date > '2026-11-18' && date <= '2026-11-22') day = buildPostHyroxRecoveryDay(context);

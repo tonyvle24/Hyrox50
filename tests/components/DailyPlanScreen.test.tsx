@@ -3,13 +3,21 @@ import { render, userEvent } from '@testing-library/react-native';
 import { DailyPlanScreen } from '../../src/screens/DailyPlanScreen';
 
 describe('DailyPlanScreen', () => {
-  it('shows Day 1 with U.S. date and all athlete sections', async () => {
+  it('shows a combined workout on a non-running day', async () => {
     const screen = await render(<DailyPlanScreen initialDate="2026-06-08" />);
     expect(screen.getByText('Day 1 of 189')).toBeTruthy();
     expect(screen.getByText('Monday, June 8, 2026')).toBeTruthy();
     expect(screen.getByText('TOGETHER')).toBeTruthy();
-    expect(screen.getByText('TONY')).toBeTruthy();
-    expect(screen.getByText('LIZ')).toBeTruthy();
+    expect(screen.getByText('WORKOUT')).toBeTruthy();
+    expect(screen.queryByText('TONY RUN')).toBeNull();
+    expect(screen.queryByText('LIZ HYROX RUN')).toBeNull();
+  });
+
+  it('splits Tony and Liz only on a standalone running day', async () => {
+    const screen = await render(<DailyPlanScreen initialDate="2026-06-13" />);
+    expect(screen.getByText('TONY RUN')).toBeTruthy();
+    expect(screen.getByText('LIZ HYROX RUN')).toBeTruthy();
+    expect(screen.queryByText('WORKOUT')).toBeNull();
   });
 
   it('shows actionable activity details', async () => {

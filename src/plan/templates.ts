@@ -53,6 +53,85 @@ const taperPlan = (name: string, prescription: string): AthletePlan =>
     [activity('Cooldown', '5 minutes easy walking, then prepare race gear and hydration', 'RPE 1', 'Continuous', 'Prioritize sleep and familiar food.')],
   );
 
+const completedPlan = (): AthletePlan =>
+  plan(
+    'Completed lower-body strength and sled work.',
+    [activity('Warmup', 'Completed before the session', 'RPE as performed', 'As performed', 'No additional work required.')],
+    [
+      activity('Back squat', 'Completed on June 8; sets, reps, and load as performed', 'RPE as performed', 'As performed', 'Treat this as the week\'s primary squat work.'),
+      activity('Single-leg RDL', 'Completed on June 8; sets, reps, and load as performed', 'RPE as performed', 'As performed', 'Treat this as the week\'s primary single-leg hinge work.'),
+      activity('Bulgarian split squat', 'Completed on June 8; sets, reps, and load as performed', 'RPE as performed', 'As performed', 'No additional split-squat volume is needed this week.'),
+      activity('Sled push', 'Completed on June 8; distance and load as performed', 'RPE as performed', 'As performed', 'Allow the legs to recover before the next sled session.'),
+      activity('Sled pull', 'Completed on June 8; distance and load as performed', 'RPE as performed', 'As performed', 'Allow the posterior chain to recover.'),
+    ],
+    [activity('Recovery', 'Easy walking, hydration, and normal post-workout recovery', 'RPE 1-2', 'Continuous', 'Finish the day without adding lower-body volume.')],
+  );
+
+export const buildCompletedLowerBodySledDay = (context: PlanContext): DailyPlan =>
+  base(
+    context,
+    'Completed Lower Body + Sled Session',
+    'Record the completed session and use it to guide the rest of the week.',
+    60,
+    ['Barbell', 'Dumbbells', 'Sled'],
+    recoveryPlan('Together'),
+    completedPlan(),
+    completedPlan(),
+    ['This completed session replaces the originally scheduled lower-body and sled work.', 'Do not repeat heavy lower-body work on the following two days.'],
+  );
+
+export const buildUpperBodyCoreRecoveryDay = (context: PlanContext): DailyPlan => {
+  const athletePlan = plan(
+    'Train upper body and core while the legs recover.',
+    easyWarmup('Both'),
+    [
+      activity('Dumbbell bench press', '3 sets x 8 reps at a smooth, controlled load', 'RPE 6', '90 seconds between sets', 'Leave 4 good reps in reserve.'),
+      activity('Chest-supported dumbbell row', '3 sets x 10 reps', 'RPE 6', '75 seconds between sets', 'Keep the torso supported and shoulders controlled.'),
+      activity('Half-kneeling Pallof press', '3 sets x 10 reps/side', 'RPE 5-6', '45 seconds between sets', 'Resist rotation and breathe normally.'),
+      activity('Dead bug', '3 sets x 6 slow reps/side', 'RPE 4-5', '30 seconds between sets', 'Keep the low back gently supported.'),
+    ],
+    cooldown('Both'),
+  );
+  return base(
+    context,
+    'Upper Body + Core Recovery',
+    'Build upper-body and trunk strength without repeating yesterday\'s lower-body stress.',
+    50,
+    ['Dumbbells', 'Cable or resistance band', 'Exercise mat'],
+    plan('Use easy low-impact movement together.', easyWarmup('Together'), [activity('Easy bike or walk', '15-20 minutes at conversational effort', 'RPE 2-3', 'Continuous', 'Stop if leg soreness increases.')], cooldown('Together')),
+    athletePlan,
+    athletePlan,
+    ['No running, sled work, squats, lunges, or hinging today.', 'Reduce load if yesterday\'s soreness affects setup or bracing.'],
+  );
+};
+
+export const buildAerobicRecoveryMobilityDay = (context: PlanContext): DailyPlan => {
+  const athletePlan = plan(
+    'Restore the legs with low-impact aerobic work and mobility.',
+    [activity('Easy warmup', '5 minutes relaxed walking or cycling', 'RPE 1-2', 'Continuous', 'Start easier than feels necessary.')],
+    [
+      activity('Low-impact aerobic recovery', '25-35 minutes easy bike, walk, SkiErg, or RowErg', 'RPE 3', 'Continuous; short breaks allowed', 'Keep breathing conversational throughout.'),
+      activity('Recovery mobility', '2 rounds: 30 seconds each calf, hip flexor, glute, hamstring, and upper back', 'RPE 1-2', 'Move directly between stretches', 'Use a comfortable, pain-free range.'),
+    ],
+    [activity('Relaxed breathing', '3 minutes easy breathing', 'RPE 1', 'Continuous', 'Finish feeling better than you started.')],
+  );
+  return base(context, 'Aerobic Recovery + Mobility', 'Recover from Monday while maintaining easy aerobic movement.', 45, ['Bike, treadmill, SkiErg, or RowErg'], athletePlan, athletePlan, athletePlan, ['No lower-body strength work today.', 'Choose walking or cycling if the legs remain sore.']);
+};
+
+export const buildHyroxTechniqueNoSledDay = (context: PlanContext): DailyPlan => {
+  const athletePlan = plan(
+    'Practice HYROX engine pacing and transitions without heavy leg work.',
+    easyWarmup('Both'),
+    [
+      activity('HYROX engine technique', '4 rounds: 500 meters SkiErg, 500 meters RowErg, then 60 seconds easy walking', 'RPE 5-6', '90 seconds between rounds', 'Keep every round smooth and repeatable.'),
+      activity('Farmer carry technique', '4 sets x 100 feet at a moderate load', 'RPE 5-6', '60 seconds between sets', 'Stay tall and use short controlled steps.'),
+      activity('Transition rehearsal', '4 rounds: practice calm equipment entry, exit, and partner handoff', 'RPE 3', '30 seconds between rounds', 'Communicate before every handoff.'),
+    ],
+    cooldown('Both'),
+  );
+  return base(context, 'HYROX Technique - No Sleds', 'Practice pacing and transitions while protecting the recovering legs.', 55, ['SkiErg', 'RowErg', 'Dumbbells or kettlebells'], athletePlan, athletePlan, athletePlan, ['No sleds, squats, lunges, or hard running today.', 'Keep the session technical rather than competitive.']);
+};
+
 export const buildMondayHyroxSkill = (context: PlanContext): DailyPlan => {
   const rounds = context.weekNumber < 6 ? 3 : context.weekNumber < 16 ? 4 : 5;
   return base(

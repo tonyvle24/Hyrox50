@@ -28,7 +28,7 @@ describe('simplified training plan', () => {
   it('gives Tony and Liz the same strength and HYROX work, with Liz keeping HYROX-specific runs', () => {
     const skillDay = trainingPlan.find((day) => day.date === '2026-06-08')!;
     const circuitDay = trainingPlan.find((day) => day.date === '2026-06-11')!;
-    const runDay = trainingPlan.find((day) => day.date === '2026-06-09')!;
+    const runDay = trainingPlan.find((day) => day.date === '2026-06-13')!;
     const longRunDay = trainingPlan.find((day) => day.date === '2026-06-14')!;
 
     expect(skillDay.liz).toEqual(skillDay.tony);
@@ -41,6 +41,27 @@ describe('simplified training plan', () => {
       expect(`${day.title} ${day.purpose} ${day.coachingNotes.join(' ')}`).not.toMatch(/\bTony\b|\bLiz\b/);
     }
     expect(longRunDay.title).toBe('Long Run + HYROX Recovery');
+  });
+
+  it('adjusts the first week after the completed lower-body and sled session', () => {
+    const monday = trainingPlan.find((day) => day.date === '2026-06-08')!;
+    const tuesday = trainingPlan.find((day) => day.date === '2026-06-09')!;
+    const wednesday = trainingPlan.find((day) => day.date === '2026-06-10')!;
+    const thursday = trainingPlan.find((day) => day.date === '2026-06-11')!;
+
+    expect(monday.title).toMatch(/completed lower body.*sled/i);
+    expect(monday.tony.main.map((detail) => detail.name).join(' ')).toMatch(/back squat|single-leg RDL|Bulgarian split squat|sled push|sled pull/i);
+
+    expect(tuesday.title).toMatch(/upper body.*core/i);
+    expect(tuesday.liz).toEqual(tuesday.tony);
+    expect(tuesday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).not.toMatch(/squat|RDL|split squat|sled/i);
+
+    expect(wednesday.title).toMatch(/aerobic recovery.*mobility/i);
+    expect(wednesday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).not.toMatch(/deadlift|split squat|sled/i);
+
+    expect(thursday.title).toMatch(/HYROX technique/i);
+    expect(thursday.liz).toEqual(thursday.tony);
+    expect(thursday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).not.toMatch(/sled|squat|lunge/i);
   });
 
   it('includes both fixed race days', () => {
