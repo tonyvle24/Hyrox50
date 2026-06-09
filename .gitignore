@@ -1,0 +1,16 @@
+node_modules/
+.expo/
+.expo-home/
+.npm-cache/
+.dotslash-cache/
+.tools/
+dist*/
+.scaffold/
+.edge-qa/
+expo-server.*.log
+expo-server.pid
+expo-phone.log
+coverage/
+.env
+.env.*
+!.env.example
