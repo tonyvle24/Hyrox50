@@ -25,6 +25,24 @@ describe('simplified training plan', () => {
     }
   });
 
+  it('gives Tony and Liz the same strength and HYROX work, with Liz keeping HYROX-specific runs', () => {
+    const skillDay = trainingPlan.find((day) => day.date === '2026-06-08')!;
+    const circuitDay = trainingPlan.find((day) => day.date === '2026-06-11')!;
+    const runDay = trainingPlan.find((day) => day.date === '2026-06-09')!;
+    const longRunDay = trainingPlan.find((day) => day.date === '2026-06-14')!;
+
+    expect(skillDay.liz).toEqual(skillDay.tony);
+    expect(circuitDay.liz).toEqual(circuitDay.tony);
+    expect(runDay.liz.main[0]?.prescription).toMatch(/run|walk/i);
+    expect(runDay.liz).not.toEqual(runDay.tony);
+    expect(longRunDay.liz.main[0]?.name).not.toMatch(/long run/i);
+
+    for (const day of trainingPlan) {
+      expect(`${day.title} ${day.purpose} ${day.coachingNotes.join(' ')}`).not.toMatch(/\bTony\b|\bLiz\b/);
+    }
+    expect(longRunDay.title).toBe('Long Run + HYROX Recovery');
+  });
+
   it('includes both fixed race days', () => {
     expect(trainingPlan.find((day) => day.date === '2026-11-18')?.title).toMatch(/HYROX/i);
     expect(trainingPlan.find((day) => day.date === '2026-12-13')?.title).toMatch(/50K/i);

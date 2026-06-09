@@ -10,6 +10,10 @@ Sunday, December 13, 2026. Each day includes detailed Together, Tony, and Liz
 instructions with exercises, sets, reps, distances, durations, RPE, rest periods,
 equipment, scaling, and coaching cues.
 
+Tony and Liz complete the same strength and HYROX workouts. Liz keeps a
+HYROX-focused standalone running plan instead of Tony's 50K mileage and long
+runs.
+
 ## Use The Website
 
 After GitHub Pages is enabled, the website is available at:
