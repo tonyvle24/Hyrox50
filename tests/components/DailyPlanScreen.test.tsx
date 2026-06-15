@@ -3,11 +3,11 @@ import { render, userEvent } from '@testing-library/react-native';
 import { DailyPlanScreen } from '../../src/screens/DailyPlanScreen';
 
 describe('DailyPlanScreen', () => {
-  it('shows a combined workout on a non-running day', async () => {
+  it('shows one combined workout on a non-running day', async () => {
     const screen = await render(<DailyPlanScreen initialDate="2026-06-08" />);
     expect(screen.getByText('Day 1 of 189')).toBeTruthy();
     expect(screen.getByText('Monday, June 8, 2026')).toBeTruthy();
-    expect(screen.getByText('TOGETHER')).toBeTruthy();
+    expect(screen.queryByText('TOGETHER')).toBeNull();
     expect(screen.getByText('WORKOUT')).toBeTruthy();
     expect(screen.queryByText('TONY RUN')).toBeNull();
     expect(screen.queryByText('LIZ HYROX RUN')).toBeNull();
@@ -17,6 +17,7 @@ describe('DailyPlanScreen', () => {
     const screen = await render(<DailyPlanScreen initialDate="2026-06-13" />);
     expect(screen.getByText('TONY RUN')).toBeTruthy();
     expect(screen.getByText('LIZ HYROX RUN')).toBeTruthy();
+    expect(screen.queryByText('TOGETHER')).toBeNull();
     expect(screen.queryByText('WORKOUT')).toBeNull();
   });
 

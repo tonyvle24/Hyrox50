@@ -32,7 +32,6 @@ export const DailyPlanScreen = ({ initialDate }: { initialDate?: DateKey }) => {
     <Screen>
       <DailyHeader day={day} />
       <DayNavigation onPrevious={() => setDate(getPreviousPlanDate(date))} onNext={() => setDate(getNextPlanDate(date))} onToday={() => setDate(clampToPlanDate(toDateKey(new Date())))} onBrowse={() => setBrowsing(true)} />
-      <DetailBlock label="TOGETHER" plan={day.shared} accent={colors.lime} />
       {combinedPlan.main.length ? <DetailBlock label="WORKOUT" plan={combinedPlan} accent={colors.blue} /> : null}
       {splitRuns ? <DetailBlock label="TONY RUN" plan={tonyRunPlan} accent={colors.blue} /> : null}
       {splitRuns ? <DetailBlock label="LIZ HYROX RUN" plan={lizRunPlan} accent={colors.coral} /> : null}
