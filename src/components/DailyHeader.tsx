@@ -1,21 +1,20 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import type { DailyPlan } from '../plan/types';
-import { daysBetween, formatUsDate } from '../utils/dates';
+import { daysBetween, formatUsDate, PLAN_END, PLAN_TOTAL_DAYS } from '../utils/dates';
 import { colors, radius, spacing } from '../theme/tokens';
 
 export const DailyHeader = ({ day }: { day: DailyPlan }) => (
   <View style={styles.container}>
     <Text style={styles.brand}>HYROX50</Text>
-    <Text style={styles.day}>Day {day.dayNumber} of 189</Text>
+    <Text style={styles.day}>Day {day.dayNumber} of {PLAN_TOTAL_DAYS}</Text>
     <Text style={styles.date}>{formatUsDate(day.date)}</Text>
     <View style={styles.phase}><Text style={styles.phaseText}>{day.phase}</Text></View>
     <Text style={styles.title}>{day.title}</Text>
     <Text style={styles.purpose}>{day.purpose}</Text>
     <Text style={styles.meta}>{day.estimatedMinutes} minutes - {day.equipment.length ? day.equipment.join(' - ') : 'No equipment needed'}</Text>
     <View style={styles.countdowns}>
-      <Text style={styles.countdown}>{day.date > '2026-11-18' ? 'HYROX complete' : `${daysBetween(day.date, '2026-11-18')} days to HYROX`}</Text>
-      <Text style={styles.countdown}>{Math.max(0, daysBetween(day.date, '2026-12-13'))} days to the 50K</Text>
+      <Text style={styles.countdown}>{`${daysBetween(day.date, PLAN_END)} days to HYROX`}</Text>
     </View>
   </View>
 );

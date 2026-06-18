@@ -3,16 +3,14 @@
 HYROX50 is Tony and Liz's simple daily training website for:
 
 - HYROX Mixed Doubles Dallas on November 18, 2026
-- BMW Dallas 50K on December 13, 2026
 
 The public site contains every calendar day from Monday, June 8, 2026 through
-Sunday, December 13, 2026. Each day includes detailed Together, Tony, and Liz
+Wednesday, November 18, 2026. Each day includes detailed Together, Tony, and Liz
 instructions with exercises, sets, reps, distances, durations, RPE, rest periods,
 equipment, scaling, and coaching cues.
 
 Tony and Liz complete the same strength and HYROX workouts. Liz keeps a
-HYROX-focused standalone running plan instead of Tony's 50K mileage and long
-runs.
+HYROX-focused standalone running plan on days where running prescriptions differ.
 
 ## Use The Website
 

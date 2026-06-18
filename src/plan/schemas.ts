@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { addDaysToKey } from '../utils/dates';
+import { addDaysToKey, PLAN_TOTAL_DAYS } from '../utils/dates';
 import type { DailyPlan } from './types';
 
 const activitySchema = z.object({
@@ -33,7 +33,7 @@ export const dailyPlanSchema = z.object({
 });
 
 export const validateTrainingPlan = (plan: DailyPlan[]): DailyPlan[] => {
-  const parsed = z.array(dailyPlanSchema).length(189).parse(plan) as DailyPlan[];
+  const parsed = z.array(dailyPlanSchema).length(PLAN_TOTAL_DAYS).parse(plan) as DailyPlan[];
   parsed.forEach((day, index) => {
     if (day.dayNumber !== index + 1) throw new Error(`Invalid day number at ${day.date}`);
     if (index > 0 && day.date !== addDaysToKey(parsed[index - 1]!.date, 1)) {

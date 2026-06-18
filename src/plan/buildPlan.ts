@@ -4,18 +4,15 @@ import {
   buildAerobicRecoveryMobilityDay,
   buildCompletedLowerBodySledDay,
   buildFridayRecovery,
-  buildFiftyKRaceDay,
-  buildFiftyKTaperDay,
   buildHyroxRaceDay,
   buildHyroxTaperDay,
   buildMondayHyroxSkill,
   buildSaturdaySteady,
-  buildSundayLongRun,
+  buildSundayHyroxEndurance,
   buildThursdayHyroxCircuit,
   buildTuesdayEngine,
   buildUpperBodyCoreRecoveryDay,
   buildWednesdayStrength,
-  buildPostHyroxRecoveryDay,
 } from './templates';
 import type { ActivityDetail, AthletePlan, DailyPlan, DateKey, PlanContext } from './types';
 
@@ -26,7 +23,7 @@ const builders = [
   buildThursdayHyroxCircuit,
   buildFridayRecovery,
   buildSaturdaySteady,
-  buildSundayLongRun,
+  buildSundayHyroxEndurance,
 ];
 
 const forBoth = (text: string): string =>
@@ -64,11 +61,8 @@ const isRunActivity = (detail: ActivityDetail): boolean =>
 const equalizeAthleteWorkouts = (day: DailyPlan): DailyPlan => {
   const athletePlan = planForBoth(day.tony);
   const originalLizPlan = planForBoth(day.liz);
-  const isFiftyKOnlyDay = /\bLong Run\b|\b50K\b/.test(day.title);
   const isStandaloneRunDay = /Easy Run|Run \+ Joint Strength|Steady Run/.test(day.title);
-  const lizPlan = isFiftyKOnlyDay
-    ? originalLizPlan
-    : isStandaloneRunDay
+  const lizPlan = isStandaloneRunDay
       ? {
         ...athletePlan,
         summary:
@@ -83,7 +77,7 @@ const equalizeAthleteWorkouts = (day: DailyPlan): DailyPlan => {
       : athletePlan;
   return {
     ...day,
-    title: day.title === 'Tony Long Run' ? 'Long Run + HYROX Recovery' : forBoth(day.title),
+    title: forBoth(day.title),
     purpose: forBoth(day.purpose),
     shared: planForBoth(day.shared),
     tony: athletePlan,
@@ -114,10 +108,7 @@ export const buildTrainingPlan = (): DailyPlan[] => {
       };
     }
     else if (date === '2026-11-18') day = buildHyroxRaceDay(context);
-    else if (date === '2026-12-13') day = buildFiftyKRaceDay(context);
     else if (date >= '2026-11-09' && date < '2026-11-18') day = buildHyroxTaperDay(context);
-    else if (date > '2026-11-18' && date <= '2026-11-22') day = buildPostHyroxRecoveryDay(context);
-    else if (date >= '2026-12-07' && date < '2026-12-13') day = buildFiftyKTaperDay(context);
     else day = builders[(context.dayNumber - 1) % 7]!(context);
     result.push(equalizeAthleteWorkouts(day));
     date = addDaysToKey(date, 1);

@@ -13,7 +13,7 @@ import { readBrowserDay, writeBrowserDay } from '../utils/dayLinks';
 import { AllDaysScreen } from './AllDaysScreen';
 
 const isRunActivity = (name: string, prescription: string): boolean =>
-  /\brun\b|\brunning\b|\brun\/walk\b|\bjog\b|\bjogging\b|zone 2|50K/i.test(`${name} ${prescription}`);
+  /\brun\b|\brunning\b|\brun\/walk\b|\bjog\b|\bjogging\b|zone 2/i.test(`${name} ${prescription}`);
 
 export const DailyPlanScreen = ({ initialDate }: { initialDate?: DateKey }) => {
   const [date, setDate] = useState<DateKey>(clampToPlanDate(initialDate ?? readBrowserDay() ?? toDateKey(new Date())));

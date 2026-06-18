@@ -2,11 +2,11 @@ import { dailyPlanSchema, validateTrainingPlan } from '../../src/plan/schemas';
 import { trainingPlan } from '../../src/plan/trainingPlan';
 
 describe('simplified training plan', () => {
-  it('contains exactly 189 consecutive calendar days', () => {
-    expect(trainingPlan).toHaveLength(189);
+  it('contains exactly 164 consecutive HYROX calendar days', () => {
+    expect(trainingPlan).toHaveLength(164);
     expect(trainingPlan[0]?.date).toBe('2026-06-08');
-    expect(trainingPlan.at(-1)?.date).toBe('2026-12-13');
-    expect(new Set(trainingPlan.map((day) => day.date)).size).toBe(189);
+    expect(trainingPlan.at(-1)?.date).toBe('2026-11-18');
+    expect(new Set(trainingPlan.map((day) => day.date)).size).toBe(164);
   });
 
   it('gives Tony, Liz, and Together actionable guidance every day', () => {
@@ -29,18 +29,19 @@ describe('simplified training plan', () => {
     const skillDay = trainingPlan.find((day) => day.date === '2026-06-08')!;
     const circuitDay = trainingPlan.find((day) => day.date === '2026-06-11')!;
     const runDay = trainingPlan.find((day) => day.date === '2026-06-13')!;
-    const longRunDay = trainingPlan.find((day) => day.date === '2026-06-14')!;
+    const enduranceDay = trainingPlan.find((day) => day.date === '2026-06-14')!;
 
     expect(skillDay.liz).toEqual(skillDay.tony);
     expect(circuitDay.liz).toEqual(circuitDay.tony);
     expect(runDay.liz.main[0]?.prescription).toMatch(/run|walk/i);
     expect(runDay.liz).not.toEqual(runDay.tony);
-    expect(longRunDay.liz.main[0]?.name).not.toMatch(/long run/i);
+    expect(enduranceDay.liz).toEqual(enduranceDay.tony);
+    expect(enduranceDay.title).toBe('HYROX Endurance + Stations');
+    expect(enduranceDay.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).toMatch(/Sled pull|Burpee broad jump|Wall balls/i);
 
     for (const day of trainingPlan) {
-      expect(`${day.title} ${day.purpose} ${day.coachingNotes.join(' ')}`).not.toMatch(/\bTony\b|\bLiz\b/);
+      expect(`${day.title} ${day.purpose} ${day.phase} ${day.coachingNotes.join(' ')}`).not.toMatch(/\bTony\b|\bLiz\b|\b50K\b|\bUltra\b|\bBMW\b|Long Run/i);
     }
-    expect(longRunDay.title).toBe('Long Run + HYROX Recovery');
   });
 
   it('adjusts the first week after the completed lower-body and sled session', () => {
@@ -67,35 +68,18 @@ describe('simplified training plan', () => {
     expect(thursday.coachingNotes.join(' ')).toMatch(/controlled|moderate|recovered/i);
   });
 
-  it('includes both fixed race days', () => {
+  it('includes only the HYROX fixed race day', () => {
     expect(trainingPlan.find((day) => day.date === '2026-11-18')?.title).toMatch(/HYROX/i);
-    expect(trainingPlan.find((day) => day.date === '2026-12-13')?.title).toMatch(/50K/i);
-  });
-
-  it('contains exactly one race day for each fixed event', () => {
+    expect(trainingPlan.find((day) => day.date === '2026-12-13')).toBeUndefined();
     expect(trainingPlan.filter((day) => day.title.includes('HYROX Mixed Doubles'))).toHaveLength(1);
-    const fiftyKDays = trainingPlan.filter((day) => day.title.includes('50K Race Day'));
-    expect(fiftyKDays).toHaveLength(1);
-    expect(fiftyKDays[0]?.date).toBe('2026-12-13');
+    expect(trainingPlan.some((day) => /50K|BMW|Ultra|Long Run/i.test(`${day.title} ${day.purpose}`))).toBe(false);
   });
 
-  it('implements the HYROX taper and post-race recovery window', () => {
+  it('implements the HYROX taper through race day', () => {
     const taper = trainingPlan.filter((day) => day.date >= '2026-11-09' && day.date < '2026-11-18');
     expect(taper.every((day) => day.estimatedMinutes <= 45)).toBe(true);
     expect(taper.every((day) => /taper|easy|rest/i.test(`${day.title} ${day.purpose}`))).toBe(true);
     expect(taper.every((day) => day.phase === 'HYROX Taper')).toBe(true);
-
-    const recovery = trainingPlan.filter((day) => day.date > '2026-11-18' && day.date <= '2026-11-22');
-    expect(recovery.every((day) => day.estimatedMinutes <= 40)).toBe(true);
-    expect(recovery.every((day) => /recovery|rest/i.test(`${day.title} ${day.purpose}`))).toBe(true);
-    expect(recovery.every((day) => day.phase === 'Post-HYROX Recovery')).toBe(true);
-  });
-
-  it('implements a low-volume final 50K taper week', () => {
-    const finalWeek = trainingPlan.filter((day) => day.date >= '2026-12-07' && day.date < '2026-12-13');
-    expect(finalWeek.every((day) => day.estimatedMinutes <= 45)).toBe(true);
-    expect(finalWeek.every((day) => /taper|rest|easy|shakeout/i.test(`${day.title} ${day.purpose}`))).toBe(true);
-    expect(finalWeek.every((day) => day.phase === '50K Taper')).toBe(true);
-    expect(trainingPlan.find((day) => day.date === '2026-12-12')?.tony.summary).not.toMatch(/8-mile/i);
+    expect(trainingPlan.at(-1)?.title).toBe('HYROX Mixed Doubles Dallas');
   });
 });

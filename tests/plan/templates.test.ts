@@ -1,6 +1,6 @@
 import {
   buildMondayHyroxSkill,
-  buildSundayLongRun,
+  buildSundayHyroxEndurance,
   buildTuesdayEngine,
 } from '../../src/plan/templates';
 
@@ -28,9 +28,11 @@ describe('detailed workout templates', () => {
     expect(day.liz.main[0]?.prescription).toMatch(/run|walk/i);
   });
 
-  it('builds long-run distance and fueling guidance', () => {
-    const day = buildSundayLongRun({ ...context, weekNumber: 12 });
-    expect(day.tony.main[0]?.prescription).toMatch(/miles/i);
-    expect(day.coachingNotes.join(' ')).toMatch(/fuel|hydr/i);
+  it('builds HYROX endurance and full station guidance', () => {
+    const day = buildSundayHyroxEndurance({ ...context, weekNumber: 12 });
+    const mainText = day.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ');
+    expect(day.title).toBe('HYROX Endurance + Stations');
+    expect(mainText).toMatch(/SkiErg|RowErg|sled pull|farmer carry|sandbag lunges|wall balls|burpee broad jump/i);
+    expect(day.coachingNotes.join(' ')).toMatch(/controlled|transitions/i);
   });
 });

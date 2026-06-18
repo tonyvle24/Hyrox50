@@ -13,6 +13,6 @@ describe('shareable day hashes', () => {
   });
 
   it('accepts an in-plan day hash', () => {
-    expect(parseDayHash('#day=2026-12-13')).toBe('2026-12-13');
+    expect(parseDayHash('#day=2026-11-18')).toBe('2026-11-18');
   });
 });

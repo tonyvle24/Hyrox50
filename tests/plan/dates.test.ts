@@ -13,15 +13,15 @@ describe('U.S. plan date helpers', () => {
     expect(formatUsCompactDate('2026-06-08')).toBe('6/8/2026');
   });
 
-  it('numbers all 189 plan days', () => {
+  it('numbers all HYROX plan days', () => {
     expect(getPlanDayNumber('2026-06-08')).toBe(1);
-    expect(getPlanDayNumber('2026-12-13')).toBe(189);
+    expect(getPlanDayNumber('2026-11-18')).toBe(164);
   });
 
   it('clamps navigation to the plan boundaries', () => {
     expect(clampToPlanDate('2026-01-01')).toBe('2026-06-08');
-    expect(clampToPlanDate('2027-01-01')).toBe('2026-12-13');
+    expect(clampToPlanDate('2027-01-01')).toBe('2026-11-18');
     expect(getPreviousPlanDate('2026-06-08')).toBe('2026-06-08');
-    expect(getNextPlanDate('2026-12-13')).toBe('2026-12-13');
+    expect(getNextPlanDate('2026-11-18')).toBe('2026-11-18');
   });
 });

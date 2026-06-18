@@ -5,7 +5,7 @@ import { DailyPlanScreen } from '../../src/screens/DailyPlanScreen';
 describe('DailyPlanScreen', () => {
   it('shows one combined workout on a non-running day', async () => {
     const screen = await render(<DailyPlanScreen initialDate="2026-06-08" />);
-    expect(screen.getByText('Day 1 of 189')).toBeTruthy();
+    expect(screen.getByText('Day 1 of 164')).toBeTruthy();
     expect(screen.getByText('Monday, June 8, 2026')).toBeTruthy();
     expect(screen.queryByText('TOGETHER')).toBeNull();
     expect(screen.getByText('WORKOUT')).toBeTruthy();
@@ -42,9 +42,14 @@ describe('DailyPlanScreen', () => {
     expect(screen.getByText('Tuesday, June 9, 2026')).toBeTruthy();
   });
 
-  it('shows completed HYROX wording after race day', async () => {
+  it('clamps future dates to HYROX race day', async () => {
     const screen = await render(<DailyPlanScreen initialDate="2026-11-19" />);
-    expect(screen.getByText('HYROX complete')).toBeTruthy();
-    expect(screen.queryByText('0 days to HYROX')).toBeNull();
+    expect(screen.getByText('Wednesday, November 18, 2026')).toBeTruthy();
+    expect(screen.getByText('0 days to HYROX')).toBeTruthy();
+  });
+
+  it('does not show a 50K countdown', async () => {
+    const screen = await render(<DailyPlanScreen initialDate="2026-06-08" />);
+    expect(screen.queryByText(/50K/i)).toBeNull();
   });
 });
