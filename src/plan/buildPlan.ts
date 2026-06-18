@@ -4,9 +4,14 @@ import {
   buildAerobicRecoveryMobilityDay,
   buildCompletedLowerBodySledDay,
   buildFridayRecovery,
+  buildHyroxDeloadCircuit,
+  buildHyroxDeloadEndurance,
+  buildHyroxDeloadSkill,
+  buildHyroxDressRehearsal,
   buildHyroxRaceDay,
   buildHyroxTaperDay,
   buildMondayHyroxSkill,
+  buildSaturdayDeloadZone2,
   buildSaturdaySteady,
   buildSundayHyroxEndurance,
   buildThursdayHyroxCircuit,
@@ -24,6 +29,16 @@ const builders = [
   buildFridayRecovery,
   buildSaturdaySteady,
   buildSundayHyroxEndurance,
+];
+
+const deloadBuilders = [
+  buildHyroxDeloadSkill,
+  buildTuesdayEngine,
+  buildWednesdayStrength,
+  buildHyroxDeloadCircuit,
+  buildFridayRecovery,
+  buildSaturdayDeloadZone2,
+  buildHyroxDeloadEndurance,
 ];
 
 const forBoth = (text: string): string =>
@@ -107,8 +122,10 @@ export const buildTrainingPlan = (): DailyPlan[] => {
         coachingNotes: [...circuit.coachingNotes, 'Use a controlled, moderate sled load because heavy sled work was completed on Monday.'],
       };
     }
+    else if (date === '2026-10-25') day = buildHyroxDressRehearsal(context);
     else if (date === '2026-11-18') day = buildHyroxRaceDay(context);
     else if (date >= '2026-11-09' && date < '2026-11-18') day = buildHyroxTaperDay(context);
+    else if ([4, 8, 12, 16].includes(context.weekNumber)) day = deloadBuilders[(context.dayNumber - 1) % 7]!(context);
     else day = builders[(context.dayNumber - 1) % 7]!(context);
     result.push(equalizeAthleteWorkouts(day));
     date = addDaysToKey(date, 1);

@@ -2,6 +2,12 @@ import { dailyPlanSchema, validateTrainingPlan } from '../../src/plan/schemas';
 import { trainingPlan } from '../../src/plan/trainingPlan';
 
 describe('simplified training plan', () => {
+  const weekOf = (dayNumber: number) => Math.floor((dayNumber - 1) / 7) + 1;
+  const weekMinutes = (weekNumber: number) =>
+    trainingPlan
+      .filter((day) => weekOf(day.dayNumber) === weekNumber)
+      .reduce((sum, day) => sum + day.estimatedMinutes, 0);
+
   it('contains exactly 164 consecutive HYROX calendar days', () => {
     expect(trainingPlan).toHaveLength(164);
     expect(trainingPlan[0]?.date).toBe('2026-06-08');
@@ -81,5 +87,36 @@ describe('simplified training plan', () => {
     expect(taper.every((day) => /taper|easy|rest/i.test(`${day.title} ${day.purpose}`))).toBe(true);
     expect(taper.every((day) => day.phase === 'HYROX Taper')).toBe(true);
     expect(trainingPlan.at(-1)?.title).toBe('HYROX Mixed Doubles Dallas');
+  });
+
+  it('uses planned deload weeks before peak training', () => {
+    for (const weekNumber of [4, 8, 12, 16]) {
+      expect(weekMinutes(weekNumber)).toBeLessThanOrEqual(360);
+      const week = trainingPlan.filter((day) => weekOf(day.dayNumber) === weekNumber);
+      expect(week.filter((day) => /deload|rest|recovery/i.test(`${day.title} ${day.purpose}`)).length).toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it('makes peak Wednesdays lighter so Thursday simulations stay high quality', () => {
+    const peakWednesday = trainingPlan.find((day) => day.date === '2026-10-21')!;
+    const mainText = peakWednesday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ');
+    expect(peakWednesday.title).toMatch(/maintenance/i);
+    expect(peakWednesday.estimatedMinutes).toBeLessThanOrEqual(55);
+    expect(mainText).not.toMatch(/deadlift|split squat/i);
+  });
+
+  it('includes one controlled late-October HYROX dress rehearsal', () => {
+    const rehearsal = trainingPlan.find((day) => day.date === '2026-10-25')!;
+    const mainText = rehearsal.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ');
+    expect(rehearsal.title).toBe('Controlled HYROX Dress Rehearsal');
+    expect(mainText).toMatch(/8 rounds|1 kilometer|SkiErg|Sled push|Sled pull|Burpee broad jump|RowErg|Farmer carry|Sandbag lunges|Wall balls/i);
+    expect(mainText).toMatch(/RPE 6-7|controlled/i);
+  });
+
+  it('varies the final taper with rest and a race primer instead of repeating one day', () => {
+    const taper = trainingPlan.filter((day) => day.date >= '2026-11-09' && day.date < '2026-11-18');
+    expect(new Set(taper.map((day) => day.title)).size).toBeGreaterThanOrEqual(3);
+    expect(taper.filter((day) => /rest/i.test(day.title) && day.estimatedMinutes <= 20)).toHaveLength(3);
+    expect(trainingPlan.find((day) => day.date === '2026-11-17')?.title).toBe('HYROX Race Primer');
   });
 });

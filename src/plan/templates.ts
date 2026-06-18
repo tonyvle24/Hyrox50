@@ -173,26 +173,48 @@ export const buildTuesdayEngine = (context: PlanContext): DailyPlan => {
 };
 
 export const buildWednesdayStrength = (context: PlanContext): DailyPlan =>
-  base(
-    context,
-    'Run + Joint Strength',
-    'Strengthen the movement patterns that support running and HYROX.',
-    70,
-    ['Barbell', 'Dumbbells', 'Sandbag'],
-    plan('Lift together after Tony completes his easy run.', easyWarmup('Together'), [activity('Carry finisher', '4 rounds: 100 feet farmer carry, 8 controlled sandbag lunges/leg', 'RPE 6', '60 seconds between rounds', 'Keep posture tall and steps controlled.')], cooldown('Together')),
-    plan('Easy run plus strength.', easyWarmup('Tony'), [
-      activity('Easy run', `${Math.min(7, 4 + Math.floor(context.weekNumber / 7))} miles conversational`, 'RPE 4', 'Continuous', 'Keep this run easy enough to lift well afterward.'),
-      activity('Barbell deadlift', '4 sets x 5 reps', 'RPE 7', '2 minutes between sets', 'Use a load with 3 strong reps in reserve.'),
-      activity('Dumbbell bench press', '4 sets x 8 reps', 'RPE 7', '90 seconds between sets', 'Keep shoulders controlled.'),
-      activity('Rear-foot elevated split squat', '3 sets x 8 reps/leg', 'RPE 7', '90 seconds between sets', 'Use a stable range of motion.'),
-    ], cooldown('Tony')),
-    plan('Technique-first full-body strength.', easyWarmup('Liz'), [
-      activity('Kettlebell or dumbbell deadlift', '3 sets x 8 reps', 'RPE 6', '90 seconds between sets', 'Keep the weight close and back neutral.'),
-      activity('Dumbbell bench press', '3 sets x 8 reps', 'RPE 6', '90 seconds between sets', 'Choose a load that moves smoothly.'),
-      activity('Supported split squat', '3 sets x 6 reps/leg', 'RPE 6', '90 seconds between sets', 'Hold support for balance as needed.'),
-    ], cooldown('Liz')),
-    ['Never grind a strength rep.', 'Reduce load before reducing movement quality.'],
-  );
+  context.weekNumber >= 18
+    ? base(
+      context,
+      'HYROX Strength Maintenance',
+      'Keep strength patterns sharp without dulling Thursday simulation quality.',
+      50,
+      ['Dumbbells', 'Sandbag', 'Exercise mat'],
+      plan('Move well and leave fresh.', easyWarmup('Together'), [activity('Transition carry primer', '3 rounds: 80 feet farmer carry, 6 controlled sandbag lunges/leg', 'RPE 5-6', '60 seconds between rounds', 'Stay smooth and stop before leg fatigue builds.')], cooldown('Together')),
+      plan('Maintain strength without heavy leg fatigue.', easyWarmup('Tony'), [
+        activity('Easy aerobic primer', '20 minutes easy bike, walk, or jog', 'RPE 3-4', 'Continuous', 'Finish fresher than a normal run day.'),
+        activity('Dumbbell bench press', '3 sets x 8 reps', 'RPE 6', '75 seconds between sets', 'Move every rep cleanly.'),
+        activity('Chest-supported row', '3 sets x 10 reps', 'RPE 6', '75 seconds between sets', 'Keep shoulders controlled.'),
+        activity('Core brace circuit', '3 rounds: 10 Pallof presses/side, 20-second side plank/side', 'RPE 5', '45 seconds between rounds', 'Brace without creating leg fatigue.'),
+      ], cooldown('Tony')),
+      plan('Maintain strength without heavy leg fatigue.', easyWarmup('Liz'), [
+        activity('Easy aerobic primer', '20 minutes easy bike, walk, or run/walk', 'RPE 3-4', 'Continuous', 'Finish fresher than a normal run day.'),
+        activity('Dumbbell bench press', '3 sets x 8 reps', 'RPE 6', '75 seconds between sets', 'Move every rep cleanly.'),
+        activity('Chest-supported row', '3 sets x 10 reps', 'RPE 6', '75 seconds between sets', 'Keep shoulders controlled.'),
+        activity('Core brace circuit', '3 rounds: 10 Pallof presses/side, 20-second side plank/side', 'RPE 5', '45 seconds between rounds', 'Brace without creating leg fatigue.'),
+      ], cooldown('Liz')),
+      ['No heavy hinging, squatting, or split-squat work during HYROX Peak Wednesdays.', 'Thursday simulation quality matters more than adding fatigue today.'],
+    )
+    : base(
+      context,
+      'Run + Joint Strength',
+      'Strengthen the movement patterns that support running and HYROX.',
+      70,
+      ['Barbell', 'Dumbbells', 'Sandbag'],
+      plan('Lift together after Tony completes his easy run.', easyWarmup('Together'), [activity('Carry finisher', '4 rounds: 100 feet farmer carry, 8 controlled sandbag lunges/leg', 'RPE 6', '60 seconds between rounds', 'Keep posture tall and steps controlled.')], cooldown('Together')),
+      plan('Easy run plus strength.', easyWarmup('Tony'), [
+        activity('Easy run', `${Math.min(7, 4 + Math.floor(context.weekNumber / 7))} miles conversational`, 'RPE 4', 'Continuous', 'Keep this run easy enough to lift well afterward.'),
+        activity('Barbell deadlift', '4 sets x 5 reps', 'RPE 7', '2 minutes between sets', 'Use a load with 3 strong reps in reserve.'),
+        activity('Dumbbell bench press', '4 sets x 8 reps', 'RPE 7', '90 seconds between sets', 'Keep shoulders controlled.'),
+        activity('Rear-foot elevated split squat', '3 sets x 8 reps/leg', 'RPE 7', '90 seconds between sets', 'Use a stable range of motion.'),
+      ], cooldown('Tony')),
+      plan('Technique-first full-body strength.', easyWarmup('Liz'), [
+        activity('Kettlebell or dumbbell deadlift', '3 sets x 8 reps', 'RPE 6', '90 seconds between sets', 'Keep the weight close and back neutral.'),
+        activity('Dumbbell bench press', '3 sets x 8 reps', 'RPE 6', '90 seconds between sets', 'Choose a load that moves smoothly.'),
+        activity('Supported split squat', '3 sets x 6 reps/leg', 'RPE 6', '90 seconds between sets', 'Hold support for balance as needed.'),
+      ], cooldown('Liz')),
+      ['Never grind a strength rep.', 'Reduce load before reducing movement quality.'],
+    );
 
 export const buildThursdayHyroxCircuit = (context: PlanContext): DailyPlan => {
   const rounds = context.weekNumber < 8 ? 3 : context.weekNumber < 18 ? 4 : 5;
@@ -211,6 +233,54 @@ export const buildThursdayHyroxCircuit = (context: PlanContext): DailyPlan => {
 
 export const buildFridayRecovery = (context: PlanContext): DailyPlan =>
   base(context, 'Rest + Recovery', 'Absorb training and restore movement.', 30, [], recoveryPlan('Together'), recoveryPlan('Tony'), recoveryPlan('Liz'), ['Do not make up missed hard workouts today.']);
+
+export const buildHyroxDeloadSkill = (context: PlanContext): DailyPlan => {
+  const athletePlan = plan(
+    'Reduce load while keeping HYROX movement patterns familiar.',
+    easyWarmup('Both'),
+    [
+      activity('Technique flow', '3 rounds: 250 meters SkiErg, 30 feet easy sled push, 8 easy wall balls', 'RPE 4-5', '90 seconds between rounds', 'Move crisply and stop far from fatigue.'),
+      activity('Mobility strength', '2 rounds: 8 goblet squats, 8 band rows, 20-second dead bug hold/side', 'RPE 4', '45 seconds between rounds', 'Use this as practice, not training stress.'),
+    ],
+    cooldown('Both'),
+  );
+  return base(context, 'HYROX Deload Skill', 'Back off volume while preserving station rhythm and confidence.', 45, ['SkiErg', 'Sled', 'Wall Ball', 'Dumbbells or band'], athletePlan, athletePlan, athletePlan, ['Deload week: leave the gym fresher than usual.', 'No heavy loading or hard intervals today.']);
+};
+
+export const buildHyroxDeloadCircuit = (context: PlanContext): DailyPlan => {
+  const athletePlan = plan(
+    'Practice transitions without accumulating heavy fatigue.',
+    easyWarmup('Both'),
+    [
+      activity('Easy station circuit', '3 rounds: 400 meters easy run or walk, 250 meters RowErg, 30 feet light sled pull, 6 burpee broad jumps, 8 wall balls', 'RPE 5', '2 minutes between rounds', 'Keep breathing controlled and mechanics clean.'),
+    ],
+    cooldown('Both'),
+  );
+  return base(context, 'HYROX Deload Circuit', 'Keep race movements fresh while cutting circuit intensity.', 45, ['Treadmill', 'RowErg', 'Sled', 'Wall Ball'], athletePlan, athletePlan, athletePlan, ['Deload week: no racing the clock.', 'Use light sled loads and perfect transitions.']);
+};
+
+export const buildSaturdayDeloadZone2 = (context: PlanContext): DailyPlan => {
+  const athletePlan = plan(
+    'Keep aerobic work easy and short.',
+    easyWarmup('Both'),
+    [activity('Easy Zone 2', '35-40 minutes easy walk, incline walk, bike, or relaxed run/walk', 'RPE 3-4', 'Continuous; short breaks allowed', 'Stay conversational from start to finish.')],
+    cooldown('Both'),
+  );
+  return base(context, 'Deload Zone 2', 'Maintain aerobic rhythm without adding fatigue before Sunday.', 50, ['Running shoes, treadmill, or bike'], athletePlan, athletePlan, athletePlan, ['Deload week: cap the session even if you feel good.', 'Save the harder work for next week.']);
+};
+
+export const buildHyroxDeloadEndurance = (context: PlanContext): DailyPlan => {
+  const athletePlan = plan(
+    'Recover while touching the HYROX station menu lightly.',
+    easyWarmup('Both'),
+    [
+      activity('Light station sampler', '2 rounds: 200 meters SkiErg, 200 meters RowErg, 40 feet farmer carry, 6 sandbag lunges/leg, 8 wall balls', 'RPE 4-5', '90 seconds between rounds', 'Move smoothly and finish wanting more.'),
+      activity('Easy mobility', '2 rounds: 30 seconds each calves, hips, glutes, lats, and upper back', 'RPE 1-2', 'Move directly between stretches', 'No painful stretching.'),
+    ],
+    cooldown('Both'),
+  );
+  return base(context, 'HYROX Deload Endurance', 'Absorb training while maintaining station confidence.', 45, ['SkiErg', 'RowErg', 'Dumbbells or kettlebells', 'Sandbag', 'Wall Ball'], athletePlan, athletePlan, athletePlan, ['Deload week: this is deliberately lighter.', 'Leave with better movement quality than you started.']);
+};
 
 export const buildSaturdaySteady = (context: PlanContext): DailyPlan => {
   const miles = Math.min(9, 5 + Math.floor(context.weekNumber / 7));
@@ -234,8 +304,27 @@ export const buildSundayHyroxEndurance = (context: PlanContext): DailyPlan => {
   return base(context, 'HYROX Endurance + Stations', 'Build race-specific aerobic capacity and confidence across the full HYROX station menu.', 75, ['Treadmill or running route', 'SkiErg', 'RowErg', 'Sled', 'Dumbbells or kettlebells', 'Sandbag', 'Wall Ball'], athletePlan, athletePlan, athletePlan, ['Keep this controlled; Thursday remains the harder simulation day.', 'Practice calm transitions and station setup.']);
 };
 
+export const buildHyroxDressRehearsal = (context: PlanContext): DailyPlan => {
+  const athletePlan = plan(
+    'Practice the full race sequence at controlled effort.',
+    easyWarmup('Both'),
+    [
+      activity('Controlled HYROX rehearsal', '8 rounds at controlled RPE 6-7: 1 kilometer run, then one station in race order: 1000 meters SkiErg, 50 meters Sled push, 50 meters Sled pull, 80 meters Burpee broad jump, 1000 meters RowErg, 200 meters Farmer carry, 100 meters Sandbag lunges, 100 Wall balls. Split station work as planned for doubles.', 'RPE 6-7', 'Use transitions and partner work as recovery', 'Move smoothly, communicate early, and finish knowing you could do more.'),
+    ],
+    cooldown('Both'),
+  );
+  return base(context, 'Controlled HYROX Dress Rehearsal', 'Run the full HYROX order once at sub-race effort to test pacing, transitions, and station division.', 95, ['Race shoes', 'SkiErg', 'Sled', 'RowErg', 'Dumbbells or kettlebells', 'Sandbag', 'Wall Ball'], athletePlan, athletePlan, athletePlan, ['This is not a time trial.', 'Record what station divisions and pacing felt sustainable.']);
+};
+
 export const buildHyroxRaceDay = (context: PlanContext): DailyPlan =>
   base(context, 'HYROX Mixed Doubles Dallas', 'Race together with calm pacing and clear communication.', 100, ['Race kit', 'Shoes', 'Fuel', 'Water'], plan('Race together.', easyWarmup('Together'), [activity('HYROX Mixed Doubles race', '8 x 1-kilometer runs with all 8 HYROX stations; use planned handoffs', 'RPE 7-9', 'Use transitions and partner work as recovery', 'Stay controlled through the first half and communicate before every handoff.')], cooldown('Together')), plan('Take the larger share of heavy stations.', easyWarmup('Tony'), [activity('Race role', 'Lead sled push, sled pull, carries, and heavier station work while matching Liz on runs', 'RPE 7-9', 'Use partner handoffs as recovery', 'Do not surge away from Liz on runs.')], cooldown('Tony')), plan('Prioritize consistent movement.', easyWarmup('Liz'), [activity('Race role', 'Maintain steady runs and repeatable station chunks; call handoffs before form changes', 'RPE 7-8', 'Use Tony work periods as recovery', 'Consistency beats heroic early efforts.')], cooldown('Liz')), ['Nothing new on race day.', 'Start patient and finish together.']);
 
-export const buildHyroxTaperDay = (context: PlanContext): DailyPlan =>
-  base(context, 'HYROX Taper + Easy Movement', 'Taper for HYROX by shedding fatigue and rehearsing only easy movement.', 35, ['Race shoes', 'Race kit'], taperPlan('Together', '2 rounds: 5-minute easy walk, 3 x 20-second relaxed pickups, and 5 easy wall balls'), taperPlan('Tony', '20 minutes easy walking or jogging with 3 x 20-second relaxed pickups'), taperPlan('Liz', '20 minutes easy walking or run/walk with 3 x 20-second relaxed pickups'), ['No strength work or hard stations.', 'Finish eager to race.']);
+export const buildHyroxTaperDay = (context: PlanContext): DailyPlan => {
+  if (['2026-11-10', '2026-11-13', '2026-11-16'].includes(context.date)) {
+    return base(context, 'HYROX Taper Rest', 'Rest during the HYROX taper so fatigue drops before race day.', 15, [], recoveryPlan('Together'), recoveryPlan('Tony'), recoveryPlan('Liz'), ['No make-up training today.', 'Prioritize sleep, hydration, and normal meals.']);
+  }
+  if (context.date === '2026-11-17') {
+    return base(context, 'HYROX Race Primer', 'Easy race primer to stay sharp without adding fatigue.', 25, ['Race shoes', 'Race kit'], taperPlan('Together', '2 rounds: 5-minute easy walk, 2 x 20-second relaxed pickups, 5 easy wall balls, and one calm handoff rehearsal'), taperPlan('Tony', '10-15 minutes easy walking or jogging with 2 x 20-second relaxed pickups'), taperPlan('Liz', '10-15 minutes easy walking or run/walk with 2 x 20-second relaxed pickups'), ['Pack race gear today.', 'Stop while everything feels easy.']);
+  }
+  return base(context, 'HYROX Taper + Easy Movement', 'Taper for HYROX by shedding fatigue and rehearsing only easy movement.', 30, ['Race shoes', 'Race kit'], taperPlan('Together', '2 rounds: 5-minute easy walk, 3 x 20-second relaxed pickups, and 5 easy wall balls'), taperPlan('Tony', '20 minutes easy walking or jogging with 3 x 20-second relaxed pickups'), taperPlan('Liz', '20 minutes easy walking or run/walk with 3 x 20-second relaxed pickups'), ['No strength work or hard stations.', 'Finish eager to race.']);
+};
