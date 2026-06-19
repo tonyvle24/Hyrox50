@@ -70,7 +70,10 @@ describe('simplified training plan', () => {
 
     expect(thursday.title).toMatch(/HYROX Circuit/i);
     expect(thursday.liz).toEqual(thursday.tony);
-    expect(thursday.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ')).toMatch(/sled/i);
+    const thursdayMain = thursday.tony.main.map((detail) => `${detail.name} ${detail.prescription} ${detail.coachingCue}`).join(' ');
+    expect(thursdayMain).toMatch(/run before each station round/i);
+    expect(thursdayMain).toMatch(/split.*team total/i);
+    expect(thursdayMain).toMatch(/sled/i);
     expect(thursday.coachingNotes.join(' ')).toMatch(/controlled|moderate|recovered/i);
   });
 
