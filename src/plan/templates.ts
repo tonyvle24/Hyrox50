@@ -158,7 +158,7 @@ export const buildMondayHyroxSkill = (context: PlanContext): DailyPlan => {
 
 export const buildTuesdayEngine = (context: PlanContext): DailyPlan => {
   const tonyMiles = Math.min(6, 3 + Math.floor((context.weekNumber - 1) / 7));
-  const runMinutes = Math.min(8, 1 + Math.floor(context.weekNumber / 4));
+  const lizMiles = context.weekNumber < 4 ? 2 : context.weekNumber < 10 ? 2.5 : 3;
   return base(
     context,
     'Easy Run + Joint Engine',
@@ -167,8 +167,8 @@ export const buildTuesdayEngine = (context: PlanContext): DailyPlan => {
     ['Treadmill', 'SkiErg', 'RowErg'],
     plan('Complete the engine intervals together.', easyWarmup('Together'), [activity('Alternating engine intervals', '4 rounds: 3 minutes SkiErg, 3 minutes RowErg, 2 minutes easy walk', 'RPE 5-6', 'The 2-minute walk is recovery', 'Stay conversational and finish each round evenly.')], cooldown('Together')),
     plan(`${tonyMiles}-mile easy run before the shared engine session.`, easyWarmup('Tony'), [activity('Easy run', `${tonyMiles} miles at conversational effort`, 'RPE 4', 'Continuous; walk 60 seconds only if needed', 'Keep the first mile slower than the last mile.')], cooldown('Tony')),
-    plan('Use a confidence-first run/walk progression.', easyWarmup('Liz'), [activity('Run/walk progression', `6 rounds: ${runMinutes} minute${runMinutes === 1 ? '' : 's'} easy running, 2 minutes walking`, 'RPE 4-5', 'The 2-minute walk is recovery', 'Running pace must feel sustainable and relaxed.')], cooldown('Liz')),
-    ['No racing during engine intervals.', 'Liz may incline-walk instead of running.'],
+    plan('Use Liz\'s consistent treadmill base for a modest weekday run.', easyWarmup('Liz'), [activity('Easy treadmill run', `${lizMiles} miles at easy conversational effort; use short walk breaks only if needed`, 'RPE 4-5', 'Continuous; optional 60-second walk breaks', 'Keep this easier than the recent 3-mile treadmill runs so the engine work stays smooth.')], cooldown('Liz')),
+    ['No racing during engine intervals.', 'Liz may reduce the treadmill run by 0.5 mile if legs feel heavy.'],
   );
 };
 
@@ -209,6 +209,7 @@ export const buildWednesdayStrength = (context: PlanContext): DailyPlan =>
         activity('Rear-foot elevated split squat', '3 sets x 8 reps/leg', 'RPE 7', '90 seconds between sets', 'Use a stable range of motion.'),
       ], cooldown('Tony')),
       plan('Technique-first full-body strength.', easyWarmup('Liz'), [
+        activity('Optional easy treadmill run add-on', '1.5-mile easy treadmill run before lifting', 'RPE 3-4', 'Continuous; skip if legs feel heavy', 'This is a small aerobic add-on, not a workout to chase.'),
         activity('Kettlebell or dumbbell deadlift', '3 sets x 8 reps', 'RPE 6', '90 seconds between sets', 'Keep the weight close and back neutral.'),
         activity('Dumbbell bench press', '3 sets x 8 reps', 'RPE 6', '90 seconds between sets', 'Choose a load that moves smoothly.'),
         activity('Supported split squat', '3 sets x 6 reps/leg', 'RPE 6', '90 seconds between sets', 'Hold support for balance as needed.'),
@@ -316,8 +317,18 @@ export const buildHyroxDressRehearsal = (context: PlanContext): DailyPlan => {
   return base(context, 'Controlled HYROX Dress Rehearsal', 'Run the full HYROX order once at sub-race effort to test pacing, transitions, and station division.', 95, ['Race shoes', 'SkiErg', 'Sled', 'RowErg', 'Dumbbells or kettlebells', 'Sandbag', 'Wall Ball'], athletePlan, athletePlan, athletePlan, ['This is not a time trial.', 'Record what station divisions and pacing felt sustainable.']);
 };
 
-export const buildHyroxRaceDay = (context: PlanContext): DailyPlan =>
-  base(context, 'HYROX Mixed Doubles Dallas', 'Race together with calm pacing and clear communication.', 100, ['Race kit', 'Shoes', 'Fuel', 'Water'], plan('Race together.', easyWarmup('Together'), [activity('HYROX Mixed Doubles race', '8 x 1-kilometer runs with all 8 HYROX stations; use planned handoffs', 'RPE 7-9', 'Use transitions and partner work as recovery', 'Stay controlled through the first half and communicate before every handoff.')], cooldown('Together')), plan('Take the larger share of heavy stations.', easyWarmup('Tony'), [activity('Race role', 'Lead sled push, sled pull, carries, and heavier station work while matching Liz on runs', 'RPE 7-9', 'Use partner handoffs as recovery', 'Do not surge away from Liz on runs.')], cooldown('Tony')), plan('Prioritize consistent movement.', easyWarmup('Liz'), [activity('Race role', 'Maintain steady runs and repeatable station chunks; call handoffs before form changes', 'RPE 7-8', 'Use Tony work periods as recovery', 'Consistency beats heroic early efforts.')], cooldown('Liz')), ['Nothing new on race day.', 'Start patient and finish together.']);
+export const buildHyroxRaceDay = (context: PlanContext): DailyPlan => {
+  const racePlan = plan(
+    'Race together with the official HYROX Mixed Doubles structure.',
+    easyWarmup('Together'),
+    [
+      activity('HYROX Mixed Doubles race', '8 x 1-kilometer runs with all 8 HYROX stations; run together and split each station as one team total', 'RPE 7-9', 'Use transitions and partner work as recovery', 'Stay controlled through the first half and communicate before every handoff.'),
+      activity('Station execution', 'Use planned station chunks for sled push, sled pull, carries, lunges, and wall balls', 'RPE 7-9', 'Partner working time is the other partner\'s recovery', 'Call handoffs before form breaks.'),
+    ],
+    cooldown('Together'),
+  );
+  return base(context, 'HYROX Mixed Doubles Dallas', 'Race together with calm pacing and clear communication.', 100, ['Race kit', 'Shoes', 'Fuel', 'Water'], racePlan, racePlan, racePlan, ['Nothing new on race day.', 'Start patient and finish together.']);
+};
 
 export const buildHyroxTaperDay = (context: PlanContext): DailyPlan => {
   if (['2026-11-10', '2026-11-13', '2026-11-16'].includes(context.date)) {

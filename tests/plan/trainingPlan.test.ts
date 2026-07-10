@@ -50,6 +50,18 @@ describe('simplified training plan', () => {
     }
   });
 
+  it('supports Liz with modest weekday treadmill running now that she is running consistently', () => {
+    const tuesday = trainingPlan.find((day) => day.date === '2026-07-14')!;
+    const wednesday = trainingPlan.find((day) => day.date === '2026-07-15')!;
+    const lizTuesdayRun = tuesday.liz.main.map((detail) => `${detail.name} ${detail.prescription} ${detail.coachingCue}`).join(' ');
+    const lizWednesdayRun = wednesday.liz.main.map((detail) => `${detail.name} ${detail.prescription} ${detail.coachingCue}`).join(' ');
+
+    expect(lizTuesdayRun).toMatch(/treadmill/i);
+    expect(lizTuesdayRun).toMatch(/2\.5 miles/i);
+    expect(lizTuesdayRun).toMatch(/RPE|easy|conversational/i);
+    expect(lizWednesdayRun).toMatch(/optional.*1\.5-mile.*treadmill/i);
+  });
+
   it('adjusts the first week after the completed lower-body and sled session', () => {
     const monday = trainingPlan.find((day) => day.date === '2026-06-08')!;
     const tuesday = trainingPlan.find((day) => day.date === '2026-06-09')!;
@@ -79,6 +91,9 @@ describe('simplified training plan', () => {
 
   it('includes only the HYROX fixed race day', () => {
     expect(trainingPlan.find((day) => day.date === '2026-11-18')?.title).toMatch(/HYROX/i);
+    const raceDayText = trainingPlan.find((day) => day.date === '2026-11-18')!.tony.main.map((detail) => `${detail.name} ${detail.prescription}`).join(' ');
+    expect(raceDayText).toMatch(/8 x 1-kilometer runs/i);
+    expect(raceDayText).toMatch(/split.*station.*team total/i);
     expect(trainingPlan.find((day) => day.date === '2026-12-13')).toBeUndefined();
     expect(trainingPlan.filter((day) => day.title.includes('HYROX Mixed Doubles'))).toHaveLength(1);
     expect(trainingPlan.some((day) => /50K|BMW|Ultra|Long Run/i.test(`${day.title} ${day.purpose}`))).toBe(false);
